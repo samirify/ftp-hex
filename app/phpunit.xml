@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpunit
+        colors="true"
+        bootstrap="vendor/autoload.php"
+        testdox="true">
+    <testsuites>
+        <testsuite name="Shared Unit Tests">
+            <directory>src/Shared/Tests/Unit</directory>
+        </testsuite>
+        <testsuite name="Ftp Unit Tests">
+            <directory>src/Services/Ftp/Tests/Unit</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

@@ -1,0 +1,22 @@
+#!/usr/bin/env php
+<?php
+
+use App\App;
+use App\Shared\Infrastructure\Console\Commands\RabbitMQBrokerCommand;
+use Symfony\Component\Console\Application;
+
+require_once dirname(__DIR__).'/vendor/autoload.php';
+
+try {
+    $app = new App();
+
+    $app->run(false);
+
+    $application = new Application;
+
+    $application->add(new RabbitMQBrokerCommand($app->getContainer()));
+
+    $application->run();
+} catch (Exception $e) {
+    die($e->getMessage());
+}

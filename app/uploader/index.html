@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <title>Samirify FTP Uploader test</title>
+</head>
+
+<body>
+    <div class="p-5 pt-8 border ignore border-gray-200 not-prose dark:border-gray-800 relative bg-gray-50 dark:bg-gray-800"
+        id="react-components"></div>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18.2/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18.2/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel">
+        const App = () => {
+            const [loading, setLoading] = React.useState(true)
+            const [ftpData, setFtpData] = React.useState(null)
+            const [response, setResponse] = React.useState({})
+
+            const submitForm = (e, files, setIsSubmitting) => {
+                setResponse({})
+                setIsSubmitting(true)
+                e.preventDefault()
+
+                const filesLen = files ? files.length : 0;
+
+                const data = new FormData();
+
+                data.append("ftp[protocol]", ftpData?.protocol || 'ftp');
+                data.append("ftp[host]", ftpData?.host || '');
+                data.append("ftp[port]", parseInt(ftpData?.port || 21));
+                data.append("ftp[username]", ftpData?.username || '');
+                data.append("ftp[password]", ftpData?.password || '');
+                data.append("ftp[remotePath]", ftpData?.remotePath || '');
+
+                if (filesLen > 0) {
+                    if (filesLen === 1) {
+                        data.append("file", files[0]);
+                    } else {
+                        for (let i = 0; i < filesLen; i++) {
+                            data.append("files[]", files[i]);
+                        }
+                    }
+
+                }
+
+                fetch("http://127.0.0.1:8091/upload-files", {
+                    method: "POST",
+                    body: data
+                })
+                    .then(response => response.json())
+                    .then(response => {
+                        setResponse(response)
+                        if (!response.success) {
+                            throw Error(response.errors.join('<br />'))
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err.message)
+                    })
+                    .finally(() => {
+                        setIsSubmitting(false)
+                    });
+            }
+
+            React.useEffect(() => {
+                fetch("http://127.0.0.1:8091/init")
+                    .then(response => response.json())
+                    .then(response => {
+                        if (!response.success) {
+                            throw Error(response?.errors?.join('<br />'))
+                        }
+
+                        setFtpData(response.data.ftp)
+                    })
+                    .catch(err => {
+                        console.log(err.message)
+                    })
+                    .finally(() => {
+                        setLoading(false)
+                    });
+            }, [])
+
+            return (
+                <div className="max-w-8xl mx-auto py-12">
+                    <h2 className="text-3xl font-semibold text-center mb-6">Samirify FTP Uploader Test</h2>
+                    <hr />
+                    <div className="w-full mx-auto p-6 bg-white rounded-md">
+                        {Object.keys(response).length > 0 && <div className={`p-4 mb-4 text-md text-${response.success ? 'green' : 'red'}-800 rounded-lg bg-${response.success ? 'green' : 'red'}-50 dark:bg-gray-800 dark:text-${response.success ? 'green' : 'red'}-400`} role="alert">
+                            <span className="font-medium">{response.success ? 'Success' : 'Error'}!</span> {response.success ? (response?.message || 'Done!') : response?.errors?.join('<br />')}.
+                        </div>}
+                        
+                        <h2 className="text-1xl font-semibold text-center my-6">FTP Connection</h2>
+                        <form className="w-full">
+                            <div className="flex flex-wrap -mx-3 mb-2">
+                                <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+                                    <label className="block uppercase tracking-wide text-xs font-bold mb-2" htmlFor="ftp-protocol">
+                                        Protocol
+                                    </label>
+                                    <div className="relative">
+                                        <select value={ftpData?.protocol || ''} onChange={(e) => setFtpData(prevState => {
+                                            return {
+                                                ...prevState,
+                                                protocol: e.target.value
+                                            }
+                                        })} className="block appearance-none w-full shadow-sm border border-gray-200 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="ftp-protocol">
+                                            <option value="ftp">FTP</option>
+                                        </select>
+                                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2">
+                                            <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+                                    <label className="block uppercase tracking-wide text-xs font-bold mb-2" htmlFor="ftp-host">
+                                        Host
+                                    </label>
+                                    <input value={ftpData?.host || ''} onChange={(e) => setFtpData(prevState => {
+                                        return {
+                                            ...prevState,
+                                            host: e.target.value
+                                        }
+                                    })} className="appearance-none block w-full shadow-sm border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="ftp-host" type="text" placeholder="x.x.x.x" />
+                                </div>
+
+                                <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+                                    <label className="block uppercase tracking-wide text-xs font-bold mb-2" htmlFor="ftp-port">
+                                        Port
+                                    </label>
+                                    <input value={ftpData?.port || ''} onChange={(e) => setFtpData(prevState => {
+                                        return {
+                                            ...prevState,
+                                            port: e.target.value
+                                        }
+                                    })} className="appearance-none block w-full shadow-sm border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="ftp-port" type="number" placeholder={90210} />
+                                </div>
+                            </div>
+                            <div className="flex flex-wrap -mx-3 mb-2">
+                                <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+                                    <label className="block uppercase tracking-wide text-xs font-bold mb-2" htmlFor="ftp-username">
+                                        Username
+                                    </label>
+                                    <input value={ftpData?.username || ''} onChange={(e) => setFtpData(prevState => {
+                                        return {
+                                            ...prevState,
+                                            username: e.target.value
+                                        }
+                                    })} className="appearance-none block w-full shadow-sm border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="ftp-username" type="text" placeholder="Albuquerque" />
+                                </div>
+                                <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+                                    <label className="block uppercase tracking-wide text-xs font-bold mb-2" htmlFor="ftp-password">
+                                        Password
+                                    </label>
+                                    <input value={ftpData?.password || ''} onChange={(e) => setFtpData(prevState => {
+                                        return {
+                                            ...prevState,
+                                            password: e.target.value
+                                        }
+                                    })} className="appearance-none block w-full shadow-sm border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="ftp-password" type="password" placeholder="Albuquerque" />
+                                </div>
+
+                                <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+                                    <label className="block uppercase tracking-wide text-xs font-bold mb-2" htmlFor="ftp-remote-path">
+                                        Remote path
+                                    </label>
+                                    <input value={ftpData?.remotePath || ''} onChange={(e) => setFtpData(prevState => {
+                                        return {
+                                            ...prevState,
+                                            remotePath: e.target.value
+                                        }
+                                    })} className="appearance-none block w-full shadow-sm border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="ftp-remote-path" type="text" placeholder={90210} />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div className="max-w-12xl mt-6 mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  gap-2 sm:gap-5 not-prose">
+                        <SingleFileUpload submitForm={submitForm} />
+                        <MultipleFileUpload submitForm={submitForm} />
+                        <FolderUpload submitForm={submitForm} />
+                    </div>
+                </div>
+            );
+        }
+
+        const SingleFileUpload = (props) => {
+            const [file, setFile] = React.useState()
+            const [isSubmitting, setIsSubmitting] = React.useState(false)
+            const { submitForm } = props
+
+            return (
+                <div className="relative flex flex-col items-start justify-between overflow-hidden group shadow-lg">
+                    <div className="w-full mx-auto p-6 bg-white rounded-md">
+                        <h2 className="text-2xl font-semibold text-center mb-6">Single File Upload</h2>
+                        <form onSubmit={(e) => submitForm(e, file, setIsSubmitting)}>
+                            <div className="w-full">
+                                <div className="relative z-0 mt-0.5 flex w-full -space-x-px">
+                                    <input id="samirify-uploader-file" type="file" name="samirify-uploader-file" onChange={(e) => setFile([...e.target.files])} className="block w-full cursor-pointer appearance-none rounded-l-md border border-gray-200 bg-white px-3 py-2 text-sm transition focus:z-10 focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:opacity-75" />
+                                </div>
+                            </div>
+                            <button type="submit" disabled={isSubmitting} className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-md w-full mt-6 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-500 dark:focus:ring-opacity-50">
+                                {isSubmitting ? 'Uploading...' : 'Upload'}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            );
+        }
+
+        const MultipleFileUpload = (props) => {
+            const [files, setFiles] = React.useState([]);
+            const [isSubmitting, setIsSubmitting] = React.useState(false)
+            const { submitForm } = props
+
+            return (
+                <div className="relative flex flex-col items-start justify-between overflow-hidden group shadow-lg">
+                    <div className="w-full mx-auto p-6 bg-white rounded-md">
+                        <h2 className="text-2xl font-semibold text-center mb-6">Multiple File Upload</h2>
+                        <form onSubmit={(e) => submitForm(e, files, setIsSubmitting)}>
+                            <div className="w-full">
+                                <div className="relative z-0 mt-0.5 flex w-full -space-x-px">
+                                    <input id="samirify-uploader-multiple-files" type="file" name="samirify-uploader-file[]" onChange={(e) => setFiles([...e.target.files])} multiple={true} className="block w-full cursor-pointer appearance-none rounded-l-md border border-gray-200 bg-white px-3 py-2 text-sm transition focus:z-10 focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:opacity-75" />
+                                </div>
+                            </div>
+                            <button type="submit" disabled={isSubmitting} className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-md w-full mt-6 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-500 dark:focus:ring-opacity-50">
+                                {isSubmitting ? 'Uploading...' : 'Upload'}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            );
+        }
+
+        const FolderUpload = (props) => {
+            const [files, setFiles] = React.useState([]);
+            const [isSubmitting, setIsSubmitting] = React.useState(false)
+            const { submitForm } = props
+
+            return (
+                <div className="relative flex flex-col items-start justify-between overflow-hidden group shadow-lg">
+                    <div className="w-full mx-auto p-6 bg-white rounded-md">
+                        <h2 className="text-2xl font-semibold text-center mb-6">Full Directory Upload</h2>
+                        <form onSubmit={(e) => submitForm(e, files, setIsSubmitting)}>
+                            <div className="w-full">
+                                <div className="relative z-0 mt-0.5 flex w-full -space-x-px">
+                                    <input id="samirify-uploader-folder" type="file" name="samirify-uploader-file[]" onChange={(e) => setFiles([...e.target.files])} multiple={true} directory={''} webkitdirectory={''} mozdirectory={''} className="block w-full cursor-pointer appearance-none rounded-l-md border border-gray-200 bg-white px-3 py-2 text-sm transition focus:z-10 focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:opacity-75" />
+                                </div>
+                            </div>
+                            <button type="submit" disabled={isSubmitting} className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-md w-full mt-6 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-500 dark:focus:ring-opacity-50">
+                                {isSubmitting ? 'Uploading...' : 'Upload'}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById("react-components"));
+        root.render(<App />)
+    </script>
+</body>
+
+</html>

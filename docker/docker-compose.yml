@@ -1,0 +1,48 @@
+services:
+  nginx:
+    container_name: nginx
+    build:
+      context: ../
+      dockerfile: docker/nginx/Dockerfile
+    ports:
+      - "${NGINX_PORT:-8080}:80"
+      - "${NGINX_TEST_UPLOADER_PAGE_PORT:-3067}:90"
+    networks:
+      - internal
+    volumes:
+      - ../app/public/:/var/www/html
+      - ../app/uploader/:/var/www/uploader
+      - ./logs/nginx:/var/log/nginx
+    depends_on:
+      - php
+  php:
+    container_name: php-app
+    build:
+      context: ../
+      dockerfile: docker/php/Dockerfile
+    networks:
+      - internal
+    volumes:
+      - ../app/:/var/www/html
+      - vendor:/var/www/html/vendor
+      - ./logs/php:/var/log/fpm-php.www.log
+  mailhog:
+    container_name: mailhog
+    image: mailhog/mailhog
+    networks:
+      - internal
+    ports:
+      - 1025
+      - "${MAILHOG_CLIENT_PORT:-8025}:8025"
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3.8-management
+    ports:
+      - "5672:5672"
+      - "${RABBITMQ_CLIENT_PORT:-15672}:15672"
+volumes:
+  vendor:
+    driver: local
+networks:
+  internal:
+    driver: bridge

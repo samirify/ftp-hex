@@ -1,0 +1,10 @@
+composer.phar
+config/keys/
+vendor/
+upload/
+logs/
+/.idea
+/.vscode
+**/.DS_Store
+.phpunit.result.cache
+.env
