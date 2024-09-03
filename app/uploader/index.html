@@ -104,7 +104,7 @@
                     <hr />
                     <div className="w-full mx-auto p-6 bg-white rounded-md">
                         {Object.keys(response).length > 0 && <div className={`p-4 mb-4 text-md text-${response.success ? 'green' : 'red'}-800 rounded-lg bg-${response.success ? 'green' : 'red'}-50 dark:bg-gray-800 dark:text-${response.success ? 'green' : 'red'}-400`} role="alert">
-                            <span className="font-medium">{response.success ? 'Success' : 'Error'}!</span> {response.success ? (response?.message || 'Done!') : response?.errors?.join('<br />')}.
+                            <span className="font-medium">{response.success ? 'Success' : 'Error'}!</span> {response.success ? (response?.message || 'Done!') : response?.errors?.join('<br />')}
                         </div>}
 
                         <h2 className="text-1xl font-semibold text-center my-6">FTP Connection</h2>
