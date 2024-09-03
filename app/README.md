@@ -122,7 +122,7 @@ Or navigate to the `app` folder,  or `> cd app`, and run
 #### Useful commands
 
 ##### RabbitMQ
-To check your queue vist your local client here [Local RabbitMQ queue on poret 15675](http://localhost:15675/#/queues) (or the port you setfor `RABBITMQ_CLIENT_PORT` in `.env` file if changed!)
+To check your queue visit your local client here [Local RabbitMQ queue on poret 15675](http://localhost:15675/#/queues) (or the port you setfor `RABBITMQ_CLIENT_PORT` in `.env` file if changed!)
 
 <strong>Username:</strong> `guest` <em>You can find/change this in `RABBITMQ_USERNAME .env`</em><br />
 <strong>Password:</strong> `quest` <em>You can find/change this in `RABBITMQ_PASSWORD .env`</em>
