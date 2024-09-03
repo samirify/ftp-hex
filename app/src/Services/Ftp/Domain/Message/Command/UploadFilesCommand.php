@@ -33,11 +33,11 @@ final class UploadFilesCommand extends BaseCommand
     protected function isValid(): bool
     {
         if (empty($this->data['files_path']) && empty($this->data['files'])) {
-            throw new InvalidCommandException("You must provide either files or files_path");
+            throw new InvalidCommandException("No file to upload!");
         }
 
         if (!empty($this->data['files_path']) && !empty($this->data['files'])) {
-            throw new InvalidCommandException("You cannot provide both files and files_path");
+            throw new InvalidCommandException("No file to upload!");
         }
 
         return true;
