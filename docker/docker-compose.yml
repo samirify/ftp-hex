@@ -15,6 +15,7 @@ services:
       - ./logs/nginx:/var/log/nginx
     depends_on:
       - php
+    restart: always
   php:
     container_name: php-app
     build:
@@ -26,6 +27,7 @@ services:
       - ../app/:/var/www/html
       - vendor:/var/www/html/vendor
       - ./logs/php:/var/log/fpm-php.www.log
+    restart: always
   mailhog:
     container_name: mailhog
     image: mailhog/mailhog
@@ -34,12 +36,14 @@ services:
     ports:
       - 1025
       - "${MAILHOG_CLIENT_PORT:-8025}:8025"
+    restart: always
   rabbitmq:
     container_name: rabbitmq
     image: rabbitmq:3.8-management
     ports:
       - "5672:5672"
       - "${RABBITMQ_CLIENT_PORT:-15672}:15672"
+    restart: always
 volumes:
   vendor:
     driver: local
