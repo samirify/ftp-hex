@@ -52,7 +52,7 @@ For developers on MAC you could use:
 
 ## Running the application (locally)
 
-If you've reached here without any issues, and all your Docker containers are running fine, then you can now start the development and your local application will be available here: [http://localhost:8091](http://localhost:8091) (or the port you setfor `NGINX_PORT` in `.env` file if changed!)
+If you've reached here without any issues, and all your Docker containers are running fine, then you can now start the development and your local application will be available here: [http://localhost:8091](http://localhost:8091) (or the port you set for `NGINX_PORT` in `.env` file if changed!)
 
 This will instantiate the domain Container, but feel free to use any Container library you prefer as long as it complies with PSR-4 (i.e. [PHP-DI](https://php-di.org/)).
 
@@ -92,7 +92,7 @@ $event = new UploadFilesSuccessEvent($user->getEmail());
 $eventBus->dispatch($event);
 ```
 
-You can check the application's mailbox here: [Mailhog port 8092](http://localhost:8092/) (or the port you setfor `MAILHOG_CLIENT_PORT` in `.env` file if changed!)
+You can check the application's mailbox here: [Mailhog port 8092](http://localhost:8092/) (or the port you set for `MAILHOG_CLIENT_PORT` in `.env` file if changed!)
 
 ### Running RabbitMQ
 To consume messages saved in the queue, you can run this command at the root
@@ -122,7 +122,7 @@ Or navigate to the `app` folder,  or `> cd app`, and run
 #### Useful commands
 
 ##### RabbitMQ
-To check your queue visit your local client here [Local RabbitMQ queue on poret 15675](http://localhost:15675/#/queues) (or the port you setfor `RABBITMQ_CLIENT_PORT` in `.env` file if changed!)
+To check your queue visit your local client here [Local RabbitMQ queue on port 15675](http://localhost:15675/#/queues) (or the port you set for `RABBITMQ_CLIENT_PORT` in `.env` file if changed!)
 
 <strong>Username:</strong> `guest` <em>You can find/change this in `RABBITMQ_USERNAME .env`</em><br />
 <strong>Password:</strong> `quest` <em>You can find/change this in `RABBITMQ_PASSWORD .env`</em>
