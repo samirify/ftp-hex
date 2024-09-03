@@ -137,7 +137,7 @@ Then run
 
 Where `samirify_message_queue` is the name of your queue in `.env`
 
-##### RabbitMQ
+##### PHP Shell
 To start PHP shell
 
 `> make shell`
