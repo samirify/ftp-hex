@@ -51,7 +51,7 @@ FTP_USERNAME=
 FTP_PASSWORD=
 FTP_PATH=/public_html/my/path # Retalive to your host root. If blank the system will use the value of FTP_PATH in .env file if set or default to host root instead
 ```
-## New UI
+## Example uploader UI
 I created this page which will make it a lot easier to test [Click here once your Docker containers are up](http://localhost:3067/)
 
 <img title="a title" alt="Alt text" src="app/public/img/samirify-uploader-screenshot.png">
