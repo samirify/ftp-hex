@@ -3,6 +3,11 @@ A simple FTP uploader which is built with PHP Hexagonal architecture.
 
 It's just a prototype which I will keep improving when/if I get a chance 😎
 
+## Disclaimer
+Before we start, I'd like to point out that this is not a "package" or an "application" to be used to upload files to an FTP server!
+It all started when I wanted to implement my understanding of [Hexagonal Architecture (Ports & Adapters)](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)) by [Alistair Cockburn](https://en.wikipedia.org/wiki/Alistair_Cockburn) in PHP. 
+I then wrote this FTP Uploader as a "Service" example.
+
 ### [Documentation](app/README.md)
 
 ## Get started
