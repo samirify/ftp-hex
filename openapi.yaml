@@ -1,0 +1,38 @@
+openapi: 3.0.3
+info:
+  title: Samirify Ftp Uploader - PHP Hexagonal
+  description: "Before we start, I'd like to point out that this is not a \"package\" or an \"application\" to be used to upload files to an FTP server! It all started when I wanted to implement my understanding of Hexagonal Architecture (Ports & Adapters) by Alistair Cockburn in PHP. I then wrote this FTP Uploader as a \"Service\" example."
+  version: 1.0.0
+  contact: {}
+servers:
+  - url: http://localhost:8091
+paths:
+  "/upload-files":
+    post:
+      summary: Upload files
+      description: 'Use this end point to upload one or multiple files. You could also use it and post files directly from the Body > form-data section.'
+      operationId: uploadFiles
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties: {}
+      responses:
+        '200':
+          description: ''
+  "/init":
+    get:
+      summary: Init
+      description: This's an endpoint which will return the configuration saved in .env file for use with the Uploader UI. It's a simple GET request that you could test by clicking the init > Send button
+      operationId: init
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties: {}
+      responses:
+        '200':
+          description: ''
+tags: []
